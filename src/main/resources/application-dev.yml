@@ -15,3 +15,9 @@ mybatis:
 logging:
   level:
     com.wl.kmail: debug
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

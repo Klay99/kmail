@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wl.kmail.dao.MailDao">
+	<!-- all parameters -->
+	<sql id="allMailParams">id, theme, content, sender, recipient, createTime, isStar</sql>
+	<!-- 动态条件查询mail -->
+	<select id="getAllMail" parameterType="Mail" resultType="Mail">SELECT 
+		<include refid="allMailParams"/> FROM `mail` 
+		<where> 
+			<!-- id of this mail -->  
+			<if test=" id !=null and id !='' ">and id=#{id}</if>  
+			<!-- theme of this mail -->  
+			<if test=" theme !=null and theme !='' ">and theme=#{theme}</if>  
+			<!-- content of this mail -->  
+			<if test=" content !=null and content !='' ">and content=#{content}</if>  
+			<!-- sender of this mail -->  
+			<if test=" sender !=null and sender !='' ">and sender=#{sender}</if>  
+			<!-- recipient of this mail -->  
+			<if test=" recipient !=null and recipient !='' ">and recipient=#{recipient}</if>  
+			<!-- create time of this mail -->  
+			<if test=" createTime !=null and createTime !='' ">and createTime=#{createTime}</if>  
+			<!-- 0: is star 1: is not star -->  
+			<if test=" isStar !=null and isStar !='' ">and isStar=#{isStar}</if> 
+		</where> 
+	</select>
+
+	<select id="getMailById" parameterType="int" resultType="Mail">
+		select <include refid="allMailParams"/> from `mail` where id=#{id}
+	</select>
+
+	<!-- 动态保存mail -->
+	<insert parameterType="Mail" id="addMail">INSERT INTO `mail` 
+		<trim prefix="(" suffix=")" suffixOverrides=","> 
+			<!-- id of this mail -->  
+			<if test=" id !=null and id !='' ">id,</if>  
+			<!-- theme of this mail -->  
+			<if test=" theme !=null and theme !='' ">theme,</if>  
+			<!-- content of this mail -->  
+			<if test=" content !=null and content !='' ">content,</if>  
+			<!-- sender of this mail -->  
+			<if test=" sender !=null and sender !='' ">sender,</if>  
+			<!-- recipient of this mail -->  
+			<if test=" recipient !=null and recipient !='' ">recipient,</if>  
+			<!-- create time of this mail -->  
+			<if test=" createTime !=null and createTime !='' ">createTime,</if>  
+			<!-- 0: is star 1: is not star -->  
+			<if test=" isStar !=null and isStar !='' ">isStar,</if> 
+		</trim>  
+		<trim prefix="values(" suffix=")" suffixOverrides=","> 
+			<!-- id of this mail -->  
+			<if test=" id !=null and id !='' ">#{id},</if>  
+			<!-- theme of this mail -->  
+			<if test=" theme !=null and theme !='' ">#{theme},</if>  
+			<!-- content of this mail -->  
+			<if test=" content !=null and content !='' ">#{content},</if>  
+			<!-- sender of this mail -->  
+			<if test=" sender !=null and sender !='' ">#{sender},</if>  
+			<!-- recipient of this mail -->  
+			<if test=" recipient !=null and recipient !='' ">#{recipient},</if>  
+			<!-- create time of this mail -->  
+			<if test=" createTime !=null and createTime !='' ">#{createTime},</if>  
+			<!-- 0: is star 1: is not star -->  
+			<if test=" isStar !=null and isStar !='' ">#{isStar},</if> 
+		</trim>  
+		<selectKey resultType="int" keyProperty="id" order="AFTER">select LAST_INSERT_ID()</selectKey> 
+	</insert>
+	<!-- 动态更新mail -->
+	<update id="updateMail" parameterType="Mail">update `mail` set 
+		<trim suffixOverrides=","> 
+			<!-- id of this mail -->  
+			<if test=" id !=null and id !='' ">id=#{id},</if>  
+			<!-- theme of this mail -->  
+			<if test=" theme !=null and theme !='' ">theme=#{theme},</if>  
+			<!-- content of this mail -->  
+			<if test=" content !=null and content !='' ">content=#{content},</if>  
+			<!-- sender of this mail -->  
+			<if test=" sender !=null and sender !='' ">sender=#{sender},</if>  
+			<!-- recipient of this mail -->  
+			<if test=" recipient !=null and recipient !='' ">recipient=#{recipient},</if>  
+			<!-- create time of this mail -->  
+			<if test=" createTime !=null and createTime !='' ">createTime=#{createTime},</if>  
+			<!-- 0: is star 1: is not star -->  
+			<if test=" isStar !=null and isStar !='' ">isStar=#{isStar},</if> 
+		</trim> WHERE id = #{id}
+	</update>
+	<!-- 根据id删除mail -->
+	<delete id="removeMailById" parameterType="int">delete from `mail` where id=#{id}</delete>
+</mapper>

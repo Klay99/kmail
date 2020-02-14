@@ -1,75 +1,81 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.wl.kmail.dao.UserDao">
+	<!-- all parameters -->
+	<sql id="allUserParams">id, username, password, email, headImg, isNew</sql>
+	<!-- 动态条件查询user -->
+	<select id="getAllUser" parameterType="User" resultType="User">SELECT 
+		<include refid="allUserParams"/> FROM `user` 
+		<where> 
+			<!-- user id -->  
+			<if test=" id !=null and id !='' ">and id=#{id}</if>  
+			<!-- username -->  
+			<if test=" username !=null and username !='' ">and username=#{username}</if>  
+			<!-- password -->  
+			<if test=" password !=null and password !='' ">and password=#{password}</if>  
+			<!-- user email -->  
+			<if test=" email !=null and email !='' ">and email=#{email}</if>  
+			<!-- head img -->  
+			<if test=" headImg !=null and headImg !='' ">and headImg=#{headImg}</if>  
+			<!-- 0:is a new user 1:is not a new user -->  
+			<if test=" isNew !=null and isNew !='' ">and isNew=#{isNew}</if> 
+		</where> 
+	</select>
 
-<!--    <resultMap id="userMap" type="User">-->
-<!--        <id property="id" column="id"/>-->
-<!--        <result property="username" column="username"/>-->
-<!--        <result property="password" column="password"/>-->
-<!--        <result property="email" column="email"/>-->
-<!--        <result property="headImg" column="headImg"/>-->
-<!--        <result property="isNew" column="isNew"/>-->
-<!--    </resultMap>-->
+	<select id="getUserById" parameterType="int" resultType="User">
+		select <include refid="allUserParams"/> from `user` where id=#{id}
+	</select>
 
-    <!-- all parameters -->
-    <sql id="allUserParams">
-        id, username, password, email, headImg, isNew
-    </sql>
-
-    <!--    get all -->
-    <select id="getAllUser" resultType="User">
-        select <include refid="allUserParams"/> from `user`
-    </select>
-
-    <!--    select by id -->
-    <select id="getUserById" parameterType="int" resultType="User">
-        select <include refid="allUserParams"/> from `user` where id=#{id}
-    </select>
-
-    <!--    add user -->
-    <insert id="addUser" parameterType="User">
-        insert into `user`
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="username!=null">username,</if>
-            <if test="password!=null">password,</if>
-            <if test="email!=null">email,</if>
-            <if test="headImg!=null">headImg,</if>
-            <if test="isNew!=null">isNew,</if>
-        </trim>
-        values
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="username!=null">#{username},</if>
-            <if test="password!=null">#{password},</if>
-            <if test="email!=null">#{email},</if>
-            <if test="headImg!=null">#{headImg},</if>
-            <if test="isNew!=null">#{isNew},</if>
-        </trim>
-
-        <!-- 执行完insert后执行以下语句，返回插入数据的id，以此判断是否插入成功 -->
-        <selectKey resultType="int" keyProperty="id" order="AFTER">
-            select LAST_INSERT_ID()
-        </selectKey>
-    </insert>
-
-    <!--    update user -->
-    <update id="updateUser" parameterType="User">
-        update `user`
-        <set>
-            <trim suffixOverrides=",">
-                <if test="id!=0">id=#{id},</if>
-                <if test="username!=null">username=#{username},</if>
-                <if test="password!=null">password=#{password},</if>
-                <if test="email!=null">email=#{email},</if>
-                <if test="headImg!=null">headImg=#{headImg},</if>
-                <if test="isNew!=0">isNew=#{isNew},</if>
-            </trim>
-        </set>
-        where id=#{id}
-    </update>
-
-    <!--    delete user -->
-    <delete id="deleteUserById" parameterType="int">
-        delete from `user` where id=#{id}
-    </delete>
-
+	<!-- 动态保存user -->
+	<insert parameterType="User" id="addUser">INSERT INTO `user` 
+		<trim prefix="(" suffix=")" suffixOverrides=","> 
+			<!-- user id -->  
+			<if test=" id !=null and id !='' ">id,</if>  
+			<!-- username -->  
+			<if test=" username !=null and username !='' ">username,</if>  
+			<!-- password -->  
+			<if test=" password !=null and password !='' ">password,</if>  
+			<!-- user email -->  
+			<if test=" email !=null and email !='' ">email,</if>  
+			<!-- head img -->  
+			<if test=" headImg !=null and headImg !='' ">headImg,</if>  
+			<!-- 0:is a new user 1:is not a new user -->  
+			<if test=" isNew !=null and isNew !='' ">isNew,</if> 
+		</trim>  
+		<trim prefix="values(" suffix=")" suffixOverrides=","> 
+			<!-- user id -->  
+			<if test=" id !=null and id !='' ">#{id},</if>  
+			<!-- username -->  
+			<if test=" username !=null and username !='' ">#{username},</if>  
+			<!-- password -->  
+			<if test=" password !=null and password !='' ">#{password},</if>  
+			<!-- user email -->  
+			<if test=" email !=null and email !='' ">#{email},</if>  
+			<!-- head img -->  
+			<if test=" headImg !=null and headImg !='' ">#{headImg},</if>  
+			<!-- 0:is a new user 1:is not a new user -->  
+			<if test=" isNew !=null and isNew !='' ">#{isNew},</if> 
+		</trim>  
+		<selectKey resultType="int" keyProperty="id" order="AFTER">select LAST_INSERT_ID()</selectKey> 
+	</insert>
+	<!-- 动态更新user -->
+	<update id="updateUser" parameterType="User">update `user` set 
+		<trim suffixOverrides=","> 
+			<!-- user id -->  
+			<if test=" id !=null and id !='' ">id=#{id},</if>  
+			<!-- username -->  
+			<if test=" username !=null and username !='' ">username=#{username},</if>  
+			<!-- password -->  
+			<if test=" password !=null and password !='' ">password=#{password},</if>  
+			<!-- user email -->  
+			<if test=" email !=null and email !='' ">email=#{email},</if>  
+			<!-- head img -->  
+			<if test=" headImg !=null and headImg !='' ">headImg=#{headImg},</if>  
+			<!-- 0:is a new user 1:is not a new user -->  
+			<if test=" isNew !=null and isNew !='' ">isNew=#{isNew},</if> 
+		</trim> WHERE id = #{id}
+	</update>
+	<!-- 根据id删除user -->
+	<delete id="removeUserById" parameterType="int">delete from `user` where id=#{id}</delete>
 </mapper>

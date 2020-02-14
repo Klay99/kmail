@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wl.kmail.dao.DraftDao">
+	<!-- all parameters -->
+	<sql id="allDraftParams">id, owner, recipient, theme, content, createTime</sql>
+	<!-- 动态条件查询draft -->
+	<select id="getAllDraft" parameterType="Draft" resultType="Draft">SELECT 
+		<include refid="allDraftParams"/> FROM `draft` 
+		<where> 
+			<!-- draft id -->  
+			<if test=" id !=null and id !='' ">and id=#{id}</if>  
+			<!-- owner of this draft -->  
+			<if test=" owner !=null and owner !='' ">and owner=#{owner}</if>  
+			<!-- recipient of this draft -->  
+			<if test=" recipient !=null and recipient !='' ">and recipient=#{recipient}</if>  
+			<!-- theme of this draft -->  
+			<if test=" theme !=null and theme !='' ">and theme=#{theme}</if>  
+			<!-- content of this draft -->  
+			<if test=" content !=null and content !='' ">and content=#{content}</if>  
+			<!-- create time of this draft -->  
+			<if test=" createTime !=null and createTime !='' ">and createTime=#{createTime}</if> 
+		</where> 
+	</select>
+
+	<select id="getDraftById" parameterType="int" resultType="Draft">
+		select <include refid="allDraftParams"/> from `draft` where id=#{id}
+	</select>
+
+	<!-- 动态保存draft -->
+	<insert parameterType="Draft" id="addDraft">INSERT INTO `draft` 
+		<trim prefix="(" suffix=")" suffixOverrides=","> 
+			<!-- draft id -->  
+			<if test=" id !=null and id !='' ">id,</if>  
+			<!-- owner of this draft -->  
+			<if test=" owner !=null and owner !='' ">owner,</if>  
+			<!-- recipient of this draft -->  
+			<if test=" recipient !=null and recipient !='' ">recipient,</if>  
+			<!-- theme of this draft -->  
+			<if test=" theme !=null and theme !='' ">theme,</if>  
+			<!-- content of this draft -->  
+			<if test=" content !=null and content !='' ">content,</if>  
+			<!-- create time of this draft -->  
+			<if test=" createTime !=null and createTime !='' ">createTime,</if> 
+		</trim>  
+		<trim prefix="values(" suffix=")" suffixOverrides=","> 
+			<!-- draft id -->  
+			<if test=" id !=null and id !='' ">#{id},</if>  
+			<!-- owner of this draft -->  
+			<if test=" owner !=null and owner !='' ">#{owner},</if>  
+			<!-- recipient of this draft -->  
+			<if test=" recipient !=null and recipient !='' ">#{recipient},</if>  
+			<!-- theme of this draft -->  
+			<if test=" theme !=null and theme !='' ">#{theme},</if>  
+			<!-- content of this draft -->  
+			<if test=" content !=null and content !='' ">#{content},</if>  
+			<!-- create time of this draft -->  
+			<if test=" createTime !=null and createTime !='' ">#{createTime},</if> 
+		</trim>  
+		<selectKey resultType="int" keyProperty="id" order="AFTER">select LAST_INSERT_ID()</selectKey> 
+	</insert>
+	<!-- 动态更新draft -->
+	<update id="updateDraft" parameterType="Draft">update `draft` set 
+		<trim suffixOverrides=","> 
+			<!-- draft id -->  
+			<if test=" id !=null and id !='' ">id=#{id},</if>  
+			<!-- owner of this draft -->  
+			<if test=" owner !=null and owner !='' ">owner=#{owner},</if>  
+			<!-- recipient of this draft -->  
+			<if test=" recipient !=null and recipient !='' ">recipient=#{recipient},</if>  
+			<!-- theme of this draft -->  
+			<if test=" theme !=null and theme !='' ">theme=#{theme},</if>  
+			<!-- content of this draft -->  
+			<if test=" content !=null and content !='' ">content=#{content},</if>  
+			<!-- create time of this draft -->  
+			<if test=" createTime !=null and createTime !='' ">createTime=#{createTime},</if> 
+		</trim> WHERE id = #{id}
+	</update>
+	<!-- 根据id删除draft -->
+	<delete id="removeDraftById" parameterType="int">delete from `draft` where id=#{id}</delete>
+</mapper>

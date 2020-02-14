@@ -1,47 +1,53 @@
 package com.wl.kmail.controller;
 
+import com.wl.kmail.config.exception.MyResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.wl.kmail.config.pagehelper.PageParam;
 import com.wl.kmail.model.User;
 import com.wl.kmail.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 
-@Controller
-@RequestMapping("user")
+@Api(value = "user模块接口",description = "这是一个用户模块的接口文档")
+@RestController
+@Slf4j
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+    UserService userService;
 
-    @ResponseBody
-    @RequestMapping(value = "/getAllUser", method = RequestMethod.GET)
-    public List<User> getAllUser() {
-        return userService.getAllUser();
+	@ApiOperation("查询所有用户 支持多条件分页排序查询")
+    @PostMapping("/getAllUser")
+    public Object getAllUser(@RequestBody PageParam<User> pageParam){
+        return MyResponse.success(userService.getAllUser(pageParam)).msg("查询成功");
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/getUserById/{id}", method = RequestMethod.POST)
-    public User getUserById(@PathVariable("id") int id) {
-        return userService.getUserById(id);
+    @GetMapping("/removeUserById/{id}")
+    public Object removeUserByUserName(@PathVariable("id") int id){
+        return userService.removeUserById(id)?MyResponse.success(null).msg("删除成功"):MyResponse.error().msg("删除失败");
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/addUser", method = RequestMethod.PUT)
-    public boolean addUser(@RequestBody User user) {
-        return userService.addUser(user);
+    @PostMapping("/addUser")
+    public Object addUser(@RequestBody @Valid User userParam){
+        User user=(User)userService.addUser(userParam);
+        return user!=null?MyResponse.success(user).
+                msg("添加成功"):MyResponse.error().msg("添加失败");
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
-    public User updateUser(@RequestBody User user) {
-        return userService.updateUser(user);
+    @PutMapping("/updateUser")
+    public Object updateUser(@RequestBody@Valid User user){
+        return userService.updateUser(user)?MyResponse.success(null)
+                .msg("修改成功"):MyResponse.error().msg("修改失败");
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/deleteUserById/{id}", method = RequestMethod.POST)
-    public boolean deleteUserById(@PathVariable("id") int id) {
-        return userService.deleteUserById(id);
+    @GetMapping("/getUserById/{id}")
+    public Object getUserById(@PathVariable("id") int id){
+        User user=userService.getUserById(id);
+        return user!=null?MyResponse.success(user):null;
     }
+	
 }

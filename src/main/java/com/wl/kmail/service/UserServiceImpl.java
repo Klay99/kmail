@@ -1,44 +1,66 @@
 package com.wl.kmail.service;
 
-import com.wl.kmail.dao.UserDao;
-import com.wl.kmail.model.User;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import com.wl.kmail.config.exception.HttpCode;
+import com.wl.kmail.config.exception.MyException;
+import com.wl.kmail.config.pagehelper.PageParam;
+import com.wl.kmail.dao.UserDao;
+import com.wl.kmail.model.User;
 
 import java.util.List;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserDao userDao;
+	@Autowired
+    UserDao userDao;
 
-    @Override
-    public List<User> getAllUser() {
-        return userDao.getAllUser();
+	@Override
+	public Object getAllUser(PageParam<User> pageParam){
+    
+    	PageHelper.startPage(pageParam.getPageNum(),pageParam.getPageSize());
+        for(int i=0;i<pageParam.getOrderParams().length;i++){
+            PageHelper.orderBy(pageParam.getOrderParams()[i]);
+        }
+
+        List<User> userList=userDao.getAllUser(pageParam.getModel());
+        PageInfo<User> userPageInfo = new PageInfo<User>(userList);
+
+        return userPageInfo;
+        
     }
 
     @Override
-    public User getUserById(int id) {
-        return userDao.getUserById(id);
+    public boolean removeUserById(int id){
+    	return userDao.removeUserById(id)==1;
     }
 
     @Override
-    public boolean addUser(User user) {
+    public Object addUser(User user){
         userDao.addUser(user);
-        return userDao.getUserById(user.getId()) != null;
-    }
 
-    @Override
-    public boolean deleteUserById(int id) {
-        return userDao.deleteUserById(id) == 1;
-    }
-
-    @Override
-    public User updateUser(User user) {
-        userDao.updateUser(user);
         return userDao.getUserById(user.getId());
     }
+
+	@Override
+    public boolean updateUser(User user){
+    	if(StringUtils.isEmpty(user.getId())){
+            throw new MyException(HttpCode.ERROR).msg("通过id修改user时，id不能为空");
+        }
+
+        return userDao.updateUser(user)==1;
+    }
+
+    @Override
+    public User getUserById(int id){
+    	return userDao.getUserById(id);
+    	
+    }
+
 }

@@ -1,29 +1,32 @@
 package com.wl.kmail.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.Date;
 
-//@ApiModel(value = "user", description = "用户实体类")
-@Data
+@ApiModel(value = "User" ,description = "用户")
+@Data // 自动生成get set 和构造器
 public class User implements Serializable {
-
-//    @ApiModelProperty(value = "用户id", name = "id")
-    private int id;
-
-//    @ApiModelProperty(value = "用户名", name = "username")
-    private String username;
-
-//    @ApiModelProperty(value = "用户密码", name = "password")
-    private String password;
-
-//    @ApiModelProperty(value = "用户邮箱", name = "email")
-//    @NotEmpty(message = "邮箱不能为空")
-    private String email;
-
-//    @ApiModelProperty(value = "用户头像", name = "headImg")
-    private String headImg;
-
-//    @ApiModelProperty(value = "是否为新用户", name = "isNew")
-    private int isNew;
+	// user id
+    @ApiModelProperty(value = "user id" ,name = "id")
+	private Integer id;
+	// username
+    @ApiModelProperty(value = "username" ,name = "username")
+	private String username;
+	// password
+    @ApiModelProperty(value = "password" ,name = "password")
+	private String password;
+	// user email
+    @ApiModelProperty(value = "user email" ,name = "email")
+	private String email;
+	// head img
+    @ApiModelProperty(value = "head img" ,name = "headImg")
+	private String headImg;
+	// 0:is a new user 1:is not a new user
+    @ApiModelProperty(value = "0:is a new user 1:is not a new user" ,name = "isNew")
+	private Integer isNew;
 }
