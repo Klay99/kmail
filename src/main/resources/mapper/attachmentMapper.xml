@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wl.kmail.dao.AttachmentDao">
+	<!-- all parameters -->
+	<sql id="allAttachmentParams">id, name, address, senderId, senderMail, recipientId, recipientMail, mailId</sql>
+	<!-- 动态条件查询attachment -->
+	<select id="getAllAttachment" parameterType="Attachment" resultType="Attachment">SELECT 
+		<include refid="allAttachmentParams"/> FROM `attachment` 
+		<where> 
+			<if test=" id !=null and id !='' ">and id=#{id}</if>  
+			<if test=" name !=null and name !='' ">and name=#{name}</if>  
+			<if test=" address !=null and address !='' ">and address=#{address}</if>  
+			<if test=" senderId !=null and senderId !='' ">and senderId=#{senderId}</if>  
+			<if test=" senderMail !=null and senderMail !='' ">and senderMail=#{senderMail}</if>  
+			<if test=" recipientId !=null and recipientId !='' ">and recipientId=#{recipientId}</if>  
+			<if test=" recipientMail !=null and recipientMail !='' ">and recipientMail=#{recipientMail}</if>
+			<if test=" mailId !=null and mailId !='' ">and mailId=#{mailId}</if>
+		</where> 
+	</select>
+	<!-- 根据id查询Attachment -->
+	<select id="getAttachmentById" parameterType="int" resultType="Attachment">select 
+		<include refid="allAttachmentParams"/> from `attachment` where id=#{id}
+	</select>
+	<!-- 动态保存attachment -->
+	<insert parameterType="Attachment" id="addAttachment">INSERT INTO `attachment` 
+		<trim prefix="(" suffix=")" suffixOverrides=","> 
+			<if test=" id !=null and id !='' ">id,</if>  
+			<if test=" name !=null and name !='' ">name,</if>  
+			<if test=" address !=null and address !='' ">address,</if>  
+			<if test=" senderId !=null and senderId !='' ">senderId,</if>  
+			<if test=" senderMail !=null and senderMail !='' ">senderMail,</if>  
+			<if test=" recipientId !=null and recipientId !='' ">recipientId,</if>  
+			<if test=" recipientMail !=null and recipientMail !='' ">recipientMail,</if>
+			<if test=" mailId !=null and mailId !='' ">mailId,</if>
+		</trim>  
+		<trim prefix="values(" suffix=")" suffixOverrides=","> 
+			<if test=" id !=null and id !='' ">#{id},</if>  
+			<if test=" name !=null and name !='' ">#{name},</if>  
+			<if test=" address !=null and address !='' ">#{address},</if>  
+			<if test=" senderId !=null and senderId !='' ">#{senderId},</if>  
+			<if test=" senderMail !=null and senderMail !='' ">#{senderMail},</if>  
+			<if test=" recipientId !=null and recipientId !='' ">#{recipientId},</if>  
+			<if test=" recipientMail !=null and recipientMail !='' ">#{recipientMail},</if>
+			<if test=" mailId !=null and mailId !='' ">#{mailId},</if>
+		</trim>  
+		<selectKey resultType="int" keyProperty="id" order="AFTER">select LAST_INSERT_ID()</selectKey> 
+	</insert>
+	<!-- 动态更新attachment -->
+	<update id="updateAttachment" parameterType="Attachment">update `attachment` set 
+		<trim suffixOverrides=","> 
+			<if test=" id !=null and id !='' ">id=#{id},</if>  
+			<if test=" name !=null and name !='' ">name=#{name},</if>  
+			<if test=" address !=null and address !='' ">address=#{address},</if>  
+			<if test=" senderId !=null and senderId !='' ">senderId=#{senderId},</if>  
+			<if test=" senderMail !=null and senderMail !='' ">senderMail=#{senderMail},</if>  
+			<if test=" recipientId !=null and recipientId !='' ">recipientId=#{recipientId},</if>  
+			<if test=" recipientMail !=null and recipientMail !='' ">recipientMail=#{recipientMail},</if>
+			<if test=" mailId !=null and mailId !='' ">mailId=#{mailId},</if>
+		</trim> WHERE id = #{id}
+	</update>
+	<!-- 根据id删除attachment -->
+	<delete id="removeAttachmentById" parameterType="int">delete from `attachment` where id=#{id}</delete>
+</mapper>

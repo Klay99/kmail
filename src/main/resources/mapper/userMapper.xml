@@ -3,7 +3,7 @@
 
 <mapper namespace="com.wl.kmail.dao.UserDao">
 	<!-- all parameters -->
-	<sql id="allUserParams">id, username, password, email, headImg, isNew</sql>
+	<sql id="allUserParams">id, username, password, email, headImg, isNew, authCode</sql>
 	<!-- 动态条件查询user -->
 	<select id="getAllUser" parameterType="User" resultType="User">SELECT 
 		<include refid="allUserParams"/> FROM `user` 
@@ -19,14 +19,19 @@
 			<!-- head img -->  
 			<if test=" headImg !=null and headImg !='' ">and headImg=#{headImg}</if>  
 			<!-- 0:is a new user 1:is not a new user -->  
-			<if test=" isNew !=null and isNew !='' ">and isNew=#{isNew}</if> 
+			<if test=" isNew !=null and isNew !='' ">and isNew=#{isNew}</if>  
+			<!-- authorization code -->  
+			<if test=" authCode !=null and authCode !='' ">and authCode=#{authCode}</if> 
 		</where> 
 	</select>
-
-	<select id="getUserById" parameterType="int" resultType="User">
-		select <include refid="allUserParams"/> from `user` where id=#{id}
+	<!-- 根据id查询User -->
+	<select id="getUserById" parameterType="int" resultType="User">select 
+		<include refid="allUserParams"/> from `user` where id=#{id}
 	</select>
-
+	<!-- 根据mail查询User -->
+	<select id="getUserByEmail" parameterType="String" resultType="User">select
+		<include refid="allUserParams"/> from `user` where email=#{email}
+	</select>
 	<!-- 动态保存user -->
 	<insert parameterType="User" id="addUser">INSERT INTO `user` 
 		<trim prefix="(" suffix=")" suffixOverrides=","> 
@@ -41,7 +46,9 @@
 			<!-- head img -->  
 			<if test=" headImg !=null and headImg !='' ">headImg,</if>  
 			<!-- 0:is a new user 1:is not a new user -->  
-			<if test=" isNew !=null and isNew !='' ">isNew,</if> 
+			<if test=" isNew !=null and isNew !='' ">isNew,</if>  
+			<!-- authorization code -->  
+			<if test=" authCode !=null and authCode !='' ">authCode,</if> 
 		</trim>  
 		<trim prefix="values(" suffix=")" suffixOverrides=","> 
 			<!-- user id -->  
@@ -55,7 +62,9 @@
 			<!-- head img -->  
 			<if test=" headImg !=null and headImg !='' ">#{headImg},</if>  
 			<!-- 0:is a new user 1:is not a new user -->  
-			<if test=" isNew !=null and isNew !='' ">#{isNew},</if> 
+			<if test=" isNew !=null and isNew !='' ">#{isNew},</if>  
+			<!-- authorization code -->  
+			<if test=" authCode !=null and authCode !='' ">#{authCode},</if> 
 		</trim>  
 		<selectKey resultType="int" keyProperty="id" order="AFTER">select LAST_INSERT_ID()</selectKey> 
 	</insert>
@@ -73,9 +82,15 @@
 			<!-- head img -->  
 			<if test=" headImg !=null and headImg !='' ">headImg=#{headImg},</if>  
 			<!-- 0:is a new user 1:is not a new user -->  
-			<if test=" isNew !=null and isNew !='' ">isNew=#{isNew},</if> 
+			<if test=" isNew !=null and isNew !='' ">isNew=#{isNew},</if>  
+			<!-- authorization code -->  
+			<if test=" authCode !=null and authCode !='' ">authCode=#{authCode},</if> 
 		</trim> WHERE id = #{id}
 	</update>
 	<!-- 根据id删除user -->
 	<delete id="removeUserById" parameterType="int">delete from `user` where id=#{id}</delete>
+
+	<select id="login" parameterType="User" resultType="User">
+		select <include refid="allUserParams"/> from user where username=#{username} and password=#{password}
+	</select>
 </mapper>

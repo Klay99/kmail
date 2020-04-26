@@ -23,12 +23,11 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	public Object getAllMail(PageParam<Mail> pageParam){
-    
+	    // todo 根据时间查询
     	PageHelper.startPage(pageParam.getPageNum(),pageParam.getPageSize());
         for(int i=0;i<pageParam.getOrderParams().length;i++){
             PageHelper.orderBy(pageParam.getOrderParams()[i]);
         }
-
         List<Mail> mailList=mailDao.getAllMail(pageParam.getModel());
         PageInfo<Mail> mailPageInfo = new PageInfo<Mail>(mailList);
 

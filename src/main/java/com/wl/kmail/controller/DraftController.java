@@ -16,6 +16,8 @@ import javax.validation.Valid;
 @Api(value = "draft模块接口",description = "这是一个草稿模块的接口文档")
 @RestController
 @Slf4j
+@RequestMapping("draft")
+@CrossOrigin
 public class DraftController {
 
 	@Autowired

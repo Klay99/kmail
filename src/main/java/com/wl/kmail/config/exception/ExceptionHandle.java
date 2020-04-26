@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.mail.AuthenticationFailedException;
+
 /**
  * 自定义异常捕捉类，并自定义一些处理
- * 适用于：前后端分离作业时，前端遇到错误时看不懂后端异常，自定义一套异常给前端人员调试
  */
 @ControllerAdvice // 异常处理
 public class ExceptionHandle {
@@ -36,6 +37,9 @@ public class ExceptionHandle {
             HttpMessageNotReadableException exception = (HttpMessageNotReadableException)e;
             // 将HttpMessage不可读异常的信息给到响应中去
             return MyResponse.error().msg("json数据格式可能发生错误，请检查：" + exception.getMessage());
+        }else if (e instanceof AuthenticationFailedException) {
+            AuthenticationFailedException exception = (AuthenticationFailedException) e;
+            return MyResponse.error().msg("mail发送权限可能存在问题，请检查：") + exception.getMessage();
         }
 
         // 如果不在上述情况内，修改msg

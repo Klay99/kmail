@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wl.kmail.dao.FriendDao">
+	<!-- all parameters -->
+	<sql id="allFriendParams">id, userId, userMail, username, friendId, friendName, friendMail, userHeadImg, friendHeadImg, createTime, isFriend, isDeleted,groupId</sql>
+	<!-- 动态条件查询friend -->
+	<select id="getAllFriend" parameterType="Friend" resultType="Friend">SELECT 
+		<include refid="allFriendParams"/> FROM `friend` 
+		<where> 
+			<if test=" id !=null and id !='' ">and id=#{id}</if>  
+			<!-- 用户id -->  
+			<if test=" userId !=null and userId !='' ">and userId=#{userId}</if>  
+			<!-- 用户邮箱地址 -->  
+			<if test=" userMail !=null and userMail !='' ">and userMail=#{userMail}</if>  
+			<!-- 用户名 -->  
+			<if test=" username !=null and username !='' ">and username=#{username}</if>  
+			<!-- 好友id -->  
+			<if test=" friendId !=null and friendId !='' ">and friendId=#{friendId}</if>  
+			<!-- 好友名 -->  
+			<if test=" friendName !=null and friendName !='' ">and friendName=#{friendName}</if>  
+			<!-- 好友邮箱地址 -->  
+			<if test=" friendMail !=null and friendMail !='' ">and friendMail=#{friendMail}</if>  
+			<!-- 用户头像 -->  
+			<if test=" userHeadImg !=null and userHeadImg !='' ">and userHeadImg=#{userHeadImg}</if>  
+			<!-- 好友头像 -->  
+			<if test=" friendHeadImg !=null and friendHeadImg !='' ">and friendHeadImg=#{friendHeadImg}</if>  
+			<!-- 创建时间 -->  
+			<if test=" createTime !=null and createTime !='' ">and createTime=#{createTime}</if>  
+			<!-- 1：不是好友   2：是好友 -->  
+			<if test=" isFriend !=null and isFriend !='' ">and isFriend=#{isFriend}</if>  
+			<!-- 1：未删除  2：已删除 -->  
+			<if test=" isDeleted !=null and isDeleted !='' ">and isDeleted=#{isDeleted}</if>
+			<if test=" groupId !=null and groupId !='' ">and groupId=#{groupId}</if>
+		</where> 
+	</select>
+	<!-- 根据id查询Friend -->
+	<select id="getFriendById" parameterType="int" resultType="Friend">select 
+		<include refid="allFriendParams"/> from `friend` where id=#{id}
+	</select>
+	<!-- 动态保存friend -->
+	<insert parameterType="Friend" id="addFriend">INSERT INTO `friend` 
+		<trim prefix="(" suffix=")" suffixOverrides=","> 
+			<if test=" id !=null and id !='' ">id,</if>  
+			<!-- 用户id -->  
+			<if test=" userId !=null and userId !='' ">userId,</if>  
+			<!-- 用户邮箱地址 -->  
+			<if test=" userMail !=null and userMail !='' ">userMail,</if>  
+			<!-- 用户名 -->  
+			<if test=" username !=null and username !='' ">username,</if>  
+			<!-- 好友id -->  
+			<if test=" friendId !=null and friendId !='' ">friendId,</if>  
+			<!-- 好友名 -->  
+			<if test=" friendName !=null and friendName !='' ">friendName,</if>  
+			<!-- 好友邮箱地址 -->  
+			<if test=" friendMail !=null and friendMail !='' ">friendMail,</if>  
+			<!-- 用户头像 -->  
+			<if test=" userHeadImg !=null and userHeadImg !='' ">userHeadImg,</if>  
+			<!-- 好友头像 -->  
+			<if test=" friendHeadImg !=null and friendHeadImg !='' ">friendHeadImg,</if>  
+			<!-- 创建时间 -->  
+			<if test=" createTime !=null and createTime !='' ">createTime,</if>  
+			<!-- 1：不是好友   2：是好友 -->  
+			<if test=" isFriend !=null and isFriend !='' ">isFriend,</if>  
+			<!-- 1：未删除  2：已删除 -->  
+			<if test=" isDeleted !=null and isDeleted !='' ">isDeleted,</if>
+			<if test=" groupId !=null and groupId !='' ">groupId,</if>
+		</trim>  
+		<trim prefix="values(" suffix=")" suffixOverrides=","> 
+			<if test=" id !=null and id !='' ">#{id},</if>  
+			<!-- 用户id -->  
+			<if test=" userId !=null and userId !='' ">#{userId},</if>  
+			<!-- 用户邮箱地址 -->  
+			<if test=" userMail !=null and userMail !='' ">#{userMail},</if>  
+			<!-- 用户名 -->  
+			<if test=" username !=null and username !='' ">#{username},</if>  
+			<!-- 好友id -->  
+			<if test=" friendId !=null and friendId !='' ">#{friendId},</if>  
+			<!-- 好友名 -->  
+			<if test=" friendName !=null and friendName !='' ">#{friendName},</if>  
+			<!-- 好友邮箱地址 -->  
+			<if test=" friendMail !=null and friendMail !='' ">#{friendMail},</if>  
+			<!-- 用户头像 -->  
+			<if test=" userHeadImg !=null and userHeadImg !='' ">#{userHeadImg},</if>  
+			<!-- 好友头像 -->  
+			<if test=" friendHeadImg !=null and friendHeadImg !='' ">#{friendHeadImg},</if>  
+			<!-- 创建时间 -->  
+			<if test=" createTime !=null and createTime !='' ">#{createTime},</if>  
+			<!-- 1：不是好友   2：是好友 -->  
+			<if test=" isFriend !=null and isFriend !='' ">#{isFriend},</if>  
+			<!-- 1：未删除  2：已删除 -->  
+			<if test=" isDeleted !=null and isDeleted !='' ">#{isDeleted},</if>
+			<if test=" groupId !=null and groupId !='' ">#{groupId},</if>
+		</trim>  
+		<selectKey resultType="int" keyProperty="id" order="AFTER">select LAST_INSERT_ID()</selectKey> 
+	</insert>
+	<!-- 动态更新friend -->
+	<update id="updateFriend" parameterType="Friend">update `friend` set 
+		<trim suffixOverrides=","> 
+			<if test=" id !=null and id !='' ">id=#{id},</if>  
+			<!-- 用户id -->  
+			<if test=" userId !=null and userId !='' ">userId=#{userId},</if>  
+			<!-- 用户邮箱地址 -->  
+			<if test=" userMail !=null and userMail !='' ">userMail=#{userMail},</if>  
+			<!-- 用户名 -->  
+			<if test=" username !=null and username !='' ">username=#{username},</if>  
+			<!-- 好友id -->  
+			<if test=" friendId !=null and friendId !='' ">friendId=#{friendId},</if>  
+			<!-- 好友名 -->  
+			<if test=" friendName !=null and friendName !='' ">friendName=#{friendName},</if>  
+			<!-- 好友邮箱地址 -->  
+			<if test=" friendMail !=null and friendMail !='' ">friendMail=#{friendMail},</if>  
+			<!-- 用户头像 -->  
+			<if test=" userHeadImg !=null and userHeadImg !='' ">userHeadImg=#{userHeadImg},</if>  
+			<!-- 好友头像 -->  
+			<if test=" friendHeadImg !=null and friendHeadImg !='' ">friendHeadImg=#{friendHeadImg},</if>  
+			<!-- 创建时间 -->  
+			<if test=" createTime !=null and createTime !='' ">createTime=#{createTime},</if>  
+			<!-- 1：不是好友   2：是好友 -->  
+			<if test=" isFriend !=null and isFriend !='' ">isFriend=#{isFriend},</if>  
+			<!-- 1：未删除  2：已删除 -->  
+			<if test=" isDeleted !=null and isDeleted !='' ">isDeleted=#{isDeleted},</if>
+			<if test=" groupId !=null and groupId !='' ">groupId=#{groupId},</if>
+		</trim> WHERE id = #{id}
+	</update>
+	<!-- 根据id删除friend -->
+	<delete id="removeFriendById" parameterType="int">delete from `friend` where id=#{id}</delete>
+</mapper>

@@ -17,5 +17,5 @@ public interface MailDao {
     int updateMail(Mail mail);
 
     Mail getMailById(int id);
-
+    
 }

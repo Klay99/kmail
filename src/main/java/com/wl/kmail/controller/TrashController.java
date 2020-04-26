@@ -15,6 +15,8 @@ import javax.validation.Valid;
 @Api(value = "trash模块接口",description = "这是一个trash模块的接口文档")
 @RestController
 @Slf4j
+@RequestMapping("trash")
+@CrossOrigin
 public class TrashController {
 
 	@Autowired

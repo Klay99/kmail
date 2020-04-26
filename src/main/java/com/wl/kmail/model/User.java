@@ -29,4 +29,7 @@ public class User implements Serializable {
 	// 0:is a new user 1:is not a new user
     @ApiModelProperty(value = "0:is a new user 1:is not a new user" ,name = "isNew")
 	private Integer isNew;
+	// authorization code
+    @ApiModelProperty(value = "authorization code" ,name = "authCode")
+	private String authCode;
 }

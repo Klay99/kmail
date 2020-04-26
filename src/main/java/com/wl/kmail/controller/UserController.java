@@ -15,6 +15,8 @@ import javax.validation.Valid;
 @Api(value = "user模块接口",description = "这是一个用户模块的接口文档")
 @RestController
 @Slf4j
+@RequestMapping("user")
+@CrossOrigin
 public class UserController {
 
 	@Autowired
@@ -33,6 +35,7 @@ public class UserController {
 
     @PostMapping("/addUser")
     public Object addUser(@RequestBody @Valid User userParam){
+
         User user=(User)userService.addUser(userParam);
         return user!=null?MyResponse.success(user).
                 msg("添加成功"):MyResponse.error().msg("添加失败");
@@ -48,6 +51,19 @@ public class UserController {
     public Object getUserById(@PathVariable("id") int id){
         User user=userService.getUserById(id);
         return user!=null?MyResponse.success(user):null;
+    }
+
+    @GetMapping("/getUserByEmail/{email}")
+    public Object getUserByEmail(@PathVariable("email") String email){
+        User user=userService.getUserByEmail(email);
+        return user!=null?MyResponse.success(user):null;
+    }
+
+    @PostMapping("/login")
+    public Object login(@RequestBody User user){
+        User u = userService.login(user);
+
+        return u!=null?MyResponse.success(u):MyResponse.error().msg("登录失败");
     }
 	
 }

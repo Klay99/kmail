@@ -2,6 +2,12 @@ server:
   port: 8100
 
 spring:
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
+
   datasource:
     username: root
     password: 123456
@@ -21,3 +27,6 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+app:
+  filePath: F:/kmail/

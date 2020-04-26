@@ -3,65 +3,106 @@
 
 <mapper namespace="com.wl.kmail.dao.MailDao">
 	<!-- all parameters -->
-	<sql id="allMailParams">id, theme, content, sender, recipient, createTime, isStar</sql>
+	<sql id="allMailParams">id, subject, content, senderId, recipientId, createTime, isStar, senderMail, recipientMail, isRead, isSend, isDiscard, isDeleted, senderHeadImg, isDraft</sql>
 	<!-- 动态条件查询mail -->
 	<select id="getAllMail" parameterType="Mail" resultType="Mail">SELECT 
 		<include refid="allMailParams"/> FROM `mail` 
 		<where> 
 			<!-- id of this mail -->  
 			<if test=" id !=null and id !='' ">and id=#{id}</if>  
-			<!-- theme of this mail -->  
-			<if test=" theme !=null and theme !='' ">and theme=#{theme}</if>  
+			<!-- subject of this mail -->  
+			<if test=" subject !=null and subject !='' ">and subject=#{subject}</if>  
 			<!-- content of this mail -->  
 			<if test=" content !=null and content !='' ">and content=#{content}</if>  
-			<!-- sender of this mail -->  
-			<if test=" sender !=null and sender !='' ">and sender=#{sender}</if>  
-			<!-- recipient of this mail -->  
-			<if test=" recipient !=null and recipient !='' ">and recipient=#{recipient}</if>  
+			<!-- id of sender of this mail -->  
+			<if test=" senderId !=null and senderId !='' ">and senderId=#{senderId}</if>  
+			<!-- id of recipient of this mail -->  
+			<if test=" recipientId !=null and recipientId !='' ">and recipientId=#{recipientId}</if>  
 			<!-- create time of this mail -->  
 			<if test=" createTime !=null and createTime !='' ">and createTime=#{createTime}</if>  
 			<!-- 0: is star 1: is not star -->  
-			<if test=" isStar !=null and isStar !='' ">and isStar=#{isStar}</if> 
+			<if test=" isStar !=null and isStar !='' ">and isStar=#{isStar}</if>  
+			<!-- mail of sender -->  
+			<if test=" senderMail !=null and senderMail !='' ">and senderMail=#{senderMail}</if>  
+			<!-- mail of recipient -->  
+			<if test=" recipientMail !=null and recipientMail !='' ">and recipientMail=#{recipientMail}</if>
+			<!-- 1: is not read 2: is read -->
+			<if test=" isRead !=null and isRead !='' ">and isRead=#{isRead}</if>
+			<!-- 1: is not send 2: is send -->
+			<if test=" isSend !=null and isSend !='' ">and isSend=#{isSend}</if>
+			<!-- 1: is not discard 2: is discard -->
+			<if test=" isDiscard !=null and isDiscard !='' ">and isDiscard=#{isDiscard}</if>
+			<!-- 1: is not deleted 2: is deleted -->
+			<if test=" isDeleted !=null and isDeleted !='' ">and isDeleted=#{isDeleted}</if>
+			<if test=" senderHeadImg !=null and senderHeadImg !='' ">and senderHeadImg=#{senderHeadImg}</if>
+			<if test=" isDraft !=null and isDraft !='' ">and isDraft=#{isDraft}</if>
 		</where> 
 	</select>
-
-	<select id="getMailById" parameterType="int" resultType="Mail">
-		select <include refid="allMailParams"/> from `mail` where id=#{id}
+	<!-- 根据id查询Mail -->
+	<select id="getMailById" parameterType="int" resultType="Mail">select 
+		<include refid="allMailParams"/> from `mail` where id=#{id}
 	</select>
-
 	<!-- 动态保存mail -->
 	<insert parameterType="Mail" id="addMail">INSERT INTO `mail` 
 		<trim prefix="(" suffix=")" suffixOverrides=","> 
 			<!-- id of this mail -->  
 			<if test=" id !=null and id !='' ">id,</if>  
-			<!-- theme of this mail -->  
-			<if test=" theme !=null and theme !='' ">theme,</if>  
+			<!-- subject of this mail -->  
+			<if test=" subject !=null and subject !='' ">subject,</if>  
 			<!-- content of this mail -->  
 			<if test=" content !=null and content !='' ">content,</if>  
-			<!-- sender of this mail -->  
-			<if test=" sender !=null and sender !='' ">sender,</if>  
-			<!-- recipient of this mail -->  
-			<if test=" recipient !=null and recipient !='' ">recipient,</if>  
+			<!-- id of sender of this mail -->  
+			<if test=" senderId !=null and senderId !='' ">senderId,</if>  
+			<!-- id of recipient of this mail -->  
+			<if test=" recipientId !=null and recipientId !='' ">recipientId,</if>  
 			<!-- create time of this mail -->  
 			<if test=" createTime !=null and createTime !='' ">createTime,</if>  
 			<!-- 0: is star 1: is not star -->  
-			<if test=" isStar !=null and isStar !='' ">isStar,</if> 
+			<if test=" isStar !=null and isStar !='' ">isStar,</if>  
+			<!-- mail of sender -->  
+			<if test=" senderMail !=null and senderMail !='' ">senderMail,</if>  
+			<!-- mail of recipient -->  
+			<if test=" recipientMail !=null and recipientMail !='' ">recipientMail,</if>
+			<!-- mail of isRead -->
+			<if test=" isRead !=null and isRead !='' ">isRead,</if>
+			<!-- mail of isSend -->
+			<if test=" isSend !=null and isSend !='' ">isSend,</if>
+			<!-- mail of isDiscard -->
+			<if test=" isDiscard !=null and isDiscard !='' ">isDiscard,</if>
+			<!-- mail of isDeleted -->
+			<if test=" isDeleted !=null and isDeleted !='' ">isDeleted,</if>
+			<if test=" senderHeadImg !=null and senderHeadImg !='' ">senderHeadImg,</if>
+			<if test=" isDraft !=null and isDraft !='' ">isDraft,</if>
 		</trim>  
 		<trim prefix="values(" suffix=")" suffixOverrides=","> 
 			<!-- id of this mail -->  
 			<if test=" id !=null and id !='' ">#{id},</if>  
-			<!-- theme of this mail -->  
-			<if test=" theme !=null and theme !='' ">#{theme},</if>  
+			<!-- subject of this mail -->  
+			<if test=" subject !=null and subject !='' ">#{subject},</if>  
 			<!-- content of this mail -->  
 			<if test=" content !=null and content !='' ">#{content},</if>  
-			<!-- sender of this mail -->  
-			<if test=" sender !=null and sender !='' ">#{sender},</if>  
-			<!-- recipient of this mail -->  
-			<if test=" recipient !=null and recipient !='' ">#{recipient},</if>  
+			<!-- id of sender of this mail -->  
+			<if test=" senderId !=null and senderId !='' ">#{senderId},</if>  
+			<!-- id of recipient of this mail -->  
+			<if test=" recipientId !=null and recipientId !='' ">#{recipientId},</if>  
 			<!-- create time of this mail -->  
 			<if test=" createTime !=null and createTime !='' ">#{createTime},</if>  
 			<!-- 0: is star 1: is not star -->  
-			<if test=" isStar !=null and isStar !='' ">#{isStar},</if> 
+			<if test=" isStar !=null and isStar !='' ">#{isStar},</if>  
+			<!-- mail of sender -->  
+			<if test=" senderMail !=null and senderMail !='' ">#{senderMail},</if>  
+			<!-- mail of recipient -->  
+			<if test=" recipientMail !=null and recipientMail !='' ">#{recipientMail},</if>
+			<!-- mail of isRead -->
+			<if test=" isRead !=null and isRead !='' ">#{isRead},</if>
+			<!-- mail of isSend -->
+			<if test=" isSend !=null and isSend !='' ">#{isSend},</if>
+			<!-- mail of isDiscard -->
+			<if test=" isDiscard !=null and isDiscard !='' ">#{isDiscard},</if>
+			<!-- mail of isDeleted -->
+			<if test=" isDeleted !=null and isDeleted !='' ">#{isDeleted},</if>
+			<if test=" senderHeadImg !=null and senderHeadImg !='' ">#{senderHeadImg},</if>
+			<if test=" isDraft !=null and isDraft !='' ">#{isDraft},</if>
 		</trim>  
 		<selectKey resultType="int" keyProperty="id" order="AFTER">select LAST_INSERT_ID()</selectKey> 
 	</insert>
@@ -70,18 +111,32 @@
 		<trim suffixOverrides=","> 
 			<!-- id of this mail -->  
 			<if test=" id !=null and id !='' ">id=#{id},</if>  
-			<!-- theme of this mail -->  
-			<if test=" theme !=null and theme !='' ">theme=#{theme},</if>  
+			<!-- subject of this mail -->  
+			<if test=" subject !=null and subject !='' ">subject=#{subject},</if>  
 			<!-- content of this mail -->  
 			<if test=" content !=null and content !='' ">content=#{content},</if>  
-			<!-- sender of this mail -->  
-			<if test=" sender !=null and sender !='' ">sender=#{sender},</if>  
-			<!-- recipient of this mail -->  
-			<if test=" recipient !=null and recipient !='' ">recipient=#{recipient},</if>  
+			<!-- id of sender of this mail -->  
+			<if test=" senderId !=null and senderId !='' ">senderId=#{senderId},</if>  
+			<!-- id of recipient of this mail -->  
+			<if test=" recipientId !=null and recipientId !='' ">recipientId=#{recipientId},</if>  
 			<!-- create time of this mail -->  
 			<if test=" createTime !=null and createTime !='' ">createTime=#{createTime},</if>  
 			<!-- 0: is star 1: is not star -->  
-			<if test=" isStar !=null and isStar !='' ">isStar=#{isStar},</if> 
+			<if test=" isStar !=null and isStar !='' ">isStar=#{isStar},</if>  
+			<!-- mail of sender -->  
+			<if test=" senderMail !=null and senderMail !='' ">senderMail=#{senderMail},</if>  
+			<!-- mail of recipient -->  
+			<if test=" recipientMail !=null and recipientMail !='' ">recipientMail=#{recipientMail},</if>
+			<!-- mail of isRead -->
+			<if test=" isRead !=null and isRead !='' ">isRead=#{isRead},</if>
+			<!-- mail of isSend -->
+			<if test=" isSend !=null and isSend !='' ">isSend=#{isSend},</if>
+			<!-- mail of isDiscard -->
+			<if test=" isDiscard !=null and isDiscard !='' ">isDiscard=#{isDiscard},</if>
+			<!-- mail of isDeleted -->
+			<if test=" isDeleted !=null and isDeleted !='' ">isDeleted=#{isDeleted},</if>
+			<if test=" senderHeadImg !=null and senderHeadImg !='' ">senderHeadImg=#{senderHeadImg},</if>
+			<if test=" isDraft !=null and isDraft !='' ">isDraft=#{isDraft},</if>
 		</trim> WHERE id = #{id}
 	</update>
 	<!-- 根据id删除mail -->
