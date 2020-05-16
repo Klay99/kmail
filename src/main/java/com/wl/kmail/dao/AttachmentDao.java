@@ -12,10 +12,14 @@ public interface AttachmentDao {
 
     int removeAttachmentById(int id);
 
+    int removeAttachmentByMailId(int mailId);
+
     int addAttachment(Attachment attachment);
 
     int updateAttachment(Attachment attachment);
 
     Attachment getAttachmentById(int id);
+
+    List<Attachment> getAttachmentByMailId(int mailId);
     
 }

@@ -42,6 +42,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
+    public boolean removeAttachmentByMailId(int mailId) {
+        return attachmentDao.removeAttachmentByMailId(mailId) != 0;
+    }
+
+    @Override
     public Object addAttachment(Attachment attachment){
         attachmentDao.addAttachment(attachment);
 
@@ -61,6 +66,14 @@ public class AttachmentServiceImpl implements AttachmentService {
     public Attachment getAttachmentById(int id){
     	return attachmentDao.getAttachmentById(id);
     	
+    }
+
+    @Override
+    public void deleteByMailId(Integer id) {
+        List<Attachment> list = attachmentDao.getAttachmentByMailId(id);
+        for (Attachment attachment : list) {
+            attachmentDao.removeAttachmentById(attachment.getId());
+        }
     }
 
 }

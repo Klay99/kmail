@@ -72,7 +72,6 @@ public class EmailController {
 
     @ApiOperation("多功能邮件发送")
     @PostMapping("/send")
-//    @PostMapping(value = "/send", consumes = "multipart/*", headers = {"content-type=application/json", "content-type=application/json", "content-type=multipart/form-data"})
     public Object send(Mail mail, @RequestParam("recipients") ArrayList<String> recipients, @RequestParam(name = "files", required = false) ArrayList<MultipartFile> multiFiles) {
         // 截取发件人信息
         User sender = userService.getUserByEmail(mail.getSenderMail());
@@ -99,7 +98,7 @@ public class EmailController {
         }
         // 添加附件
         if (multiFiles != null) {
-            if (!addAttachments(builder, multiFiles)) {
+            if (!addAttachments(mail.getSenderId() ,builder, multiFiles)) {
                 return MyResponse.error().msg("文件上传失败");
             }
         }
@@ -119,7 +118,13 @@ public class EmailController {
             if (u != null) m.setRecipientId(u.getId()); // 收件人是否为kmail用户，如果是，添加收件人id
             m.setRecipientMail(recipient); // 添加收件人邮箱
             m.setIsSend(2);
-            mailService.addMail(m);
+            if (mail.getId() == null) {
+                mailService.addMail(m);
+            } else {
+                m.setIsDraft(1);
+                mailService.updateMail(m);
+                attachmentService.removeAttachmentByMailId(mail.getId());
+            }
             log.info("mail id: " + m.getId());
             // set attachment
             if (multiFiles != null) {
@@ -141,7 +146,7 @@ public class EmailController {
         return MyResponse.success(mails).msg("send success");
     }
 
-    private boolean addAttachments(EmailPopulatingBuilder builder, ArrayList<MultipartFile> multiFiles) {
+    private boolean addAttachments(int id, EmailPopulatingBuilder builder, ArrayList<MultipartFile> multiFiles) {
         for (MultipartFile multiFile : multiFiles) {
             String name = multiFile.getOriginalFilename();
             if (!multiFile.isEmpty()) {

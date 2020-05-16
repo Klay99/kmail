@@ -5,12 +5,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import com.wl.kmail.config.pagehelper.PageParam;
 import com.wl.kmail.model.User;
 import com.wl.kmail.service.UserService;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 @Api(value = "user模块接口",description = "这是一个用户模块的接口文档")
 @RestController
@@ -18,6 +24,9 @@ import javax.validation.Valid;
 @RequestMapping("user")
 @CrossOrigin
 public class UserController {
+
+    @Value("${app.filePath}")
+    private String filePath;
 
 	@Autowired
     UserService userService;
@@ -46,6 +55,32 @@ public class UserController {
         return userService.updateUser(user)?MyResponse.success(null)
                 .msg("修改成功"):MyResponse.error().msg("修改失败");
     }
+
+    @PostMapping("/updateHeadImg")
+    public Object addImage(@RequestParam("id") int id, @RequestParam(name = "headImg", required = false) MultipartFile file) {
+	    User user = userService.getUserById(id);
+        if (!file.isEmpty()) {
+            try {
+                String path = filePath + "img/" + file.getOriginalFilename();
+                File newFile = new File(path);
+                if (!newFile.exists()) {
+                    newFile.createNewFile();
+                }
+                BufferedOutputStream out = new BufferedOutputStream(
+                        new FileOutputStream(newFile));
+                out.write(file.getBytes());
+                out.flush();
+                out.close();
+                user.setHeadImg("http://localhost:8100/static/img/" + file.getOriginalFilename());
+                userService.updateUser(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return MyResponse.error().msg("上传失败");
+            }
+        }
+        return MyResponse.success(user).msg("上传成功");
+    }
+
 
     @GetMapping("/getUserById/{id}")
     public Object getUserById(@PathVariable("id") int id){

@@ -21,15 +21,14 @@ public class UploadController {
 
     @PostMapping("/addFile")
     @ResponseBody
-    public Object addImage(@RequestParam(name = "image_data", required = false) MultipartFile file) {
-
+    public Object addImage(@RequestParam(name = "headImg", required = false) MultipartFile file) {
         String fileName = file.getOriginalFilename();
         //文件上传
         if (!file.isEmpty()) {
             try {
                 //图片命名
 //                String newCompanyImageName = "newPIC";
-                String newCompanyImagepath = filePath + file.getOriginalFilename();
+                String newCompanyImagepath = filePath + "img/" + file.getOriginalFilename();
                 File newFile = new File(newCompanyImagepath);
                 if (!newFile.exists()) {
                     newFile.createNewFile();

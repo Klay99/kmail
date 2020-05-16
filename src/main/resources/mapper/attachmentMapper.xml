@@ -22,6 +22,10 @@
 	<select id="getAttachmentById" parameterType="int" resultType="Attachment">select 
 		<include refid="allAttachmentParams"/> from `attachment` where id=#{id}
 	</select>
+	<!-- 根据mailId查询Attachment -->
+	<select id="getAttachmentByMailId" parameterType="int" resultType="Attachment">select
+		<include refid="allAttachmentParams"/> from `attachment` where mailId=#{mailId}
+	</select>
 	<!-- 动态保存attachment -->
 	<insert parameterType="Attachment" id="addAttachment">INSERT INTO `attachment` 
 		<trim prefix="(" suffix=")" suffixOverrides=","> 
@@ -61,4 +65,6 @@
 	</update>
 	<!-- 根据id删除attachment -->
 	<delete id="removeAttachmentById" parameterType="int">delete from `attachment` where id=#{id}</delete>
+	<!-- 根据MailId删除attachment -->
+	<delete id="removeAttachmentByMailId" parameterType="int">delete from `attachment` where mailId=#{mailId}</delete>
 </mapper>

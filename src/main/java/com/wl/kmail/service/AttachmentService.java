@@ -9,10 +9,13 @@ public interface AttachmentService {
 
     boolean removeAttachmentById(int id);
 
+    boolean removeAttachmentByMailId(int mailId);
+
     Object addAttachment(Attachment attachment);
 
     boolean updateAttachment(Attachment attachment);
 
     Attachment getAttachmentById(int id);
 
+    void deleteByMailId(Integer id);
 }

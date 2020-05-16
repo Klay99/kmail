@@ -16,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @Slf4j
 @RequestMapping("attachment")
+@CrossOrigin
 public class AttachmentController {
 
 	@Autowired
@@ -30,6 +31,11 @@ public class AttachmentController {
     @GetMapping("/removeAttachmentById/{id}")
     public Object removeAttachmentByAttachmentName(@PathVariable("id") int id){
         return attachmentService.removeAttachmentById(id)?MyResponse.success(null).msg("删除成功"):MyResponse.error().msg("删除失败");
+    }
+
+    @GetMapping("/removeAttachmentByMailId/{mailId}")
+    public Object removeAttachmentByMailId(@PathVariable("mailId") int mailId){
+        return attachmentService.removeAttachmentByMailId(mailId)?MyResponse.success(null).msg("删除成功"):MyResponse.error().msg("删除失败");
     }
 
     @PostMapping("/addAttachment")
