@@ -1,4 +1,4 @@
-package com.wl.kmail.config.mail;
+package com.wl.kmail.controller;
 
 import com.wl.kmail.config.exception.MyResponse;
 import com.wl.kmail.config.pagehelper.PageParam;
