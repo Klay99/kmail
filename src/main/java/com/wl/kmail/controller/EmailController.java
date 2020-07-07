@@ -81,7 +81,6 @@ public class EmailController {
         Integer port = 587; // 465 / 25
         String username = strings[0];
         String password = sender.getAuthCode();
-
         // 添加邮件主体
         EmailPopulatingBuilder builder = EmailBuilder.startingBlank()
                 .from(sender.getUsername(), mail.getSenderMail())
